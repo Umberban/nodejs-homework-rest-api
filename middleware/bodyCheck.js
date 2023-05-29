@@ -10,7 +10,7 @@ const validateAddBody=()=>{
         next();
       });}
 
-const validateUpdateBody=(body)=>{
+const validateUpdateBody=()=>{
     return((req, res, next) => {
         const {error} = Schemas.updateSchema.validate(req.body)
         if(error){
