@@ -12,8 +12,13 @@ const listContacts = async () => {
 
 const getContactById = async (contactId) => {
     const data = await fs.readFile(contactsPath); 
-    const text = JSON.parse(data);
-    return text.find(contact=> contact.id === contactId)
+    const contacts = JSON.parse(data);
+    const contact = contacts.find(contact=> contact.id === contactId)
+    if(contact){
+      return contact;
+    }else{
+      throw httpError(404,'Not Found')
+    }
 }
 
 const removeContact = async (contactId) => {
@@ -47,7 +52,7 @@ const updateContact = async (contactId, body) => {
     throw httpError(404,'Not Found')
   }
   contacts[index] = {id: contactId, ...body};
-  await fs.writeFile(contactsPath,JSON.stringify([contacts]));
+  await fs.writeFile(contactsPath,JSON.stringify(contacts));
   return contacts[index];
 }
 
