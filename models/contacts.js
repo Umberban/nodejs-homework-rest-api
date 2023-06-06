@@ -1,65 +1,32 @@
-const fs = require('fs/promises')
-const path = require("path");
-const contactsPath = path.join(__dirname, "../models/contacts.json");
-const shortid = require('shortid');
-const { httpError } = require('../helpers/httpError');
-const listContacts = async () => {
-    const data = await fs.readFile(contactsPath); 
-    const contacts = JSON.parse(data);
-    return contacts;
-  
-}
+const mongoose = require("mongoose");
 
-const getContactById = async (contactId) => {
-    const data = await fs.readFile(contactsPath); 
-    const contacts = JSON.parse(data);
-    const contact = contacts.find(contact=> contact.id === contactId)
-    if(contact){
-      return contact;
-    }else{
-      throw httpError(404,'Not Found')
-    }
-}
-
-const removeContact = async (contactId) => {
-  const data = await fs.readFile(contactsPath); 
-  const contacts = JSON.parse(data);
-  const deletedContact = contacts.find(contact=>contact.id===contactId);
-  if(deletedContact){
-      const newContacts =  contacts.filter(contact=>contact.id!==contactId);
-      fs.writeFile(contactsPath,JSON.stringify(newContacts));}
-  else{ throw httpError(404,'Not Found')
-  }
-  }
-
-const addContact = async (body) => {
-    console.log(body);
-    const data = await fs.readFile(contactsPath); 
-    const contacts = JSON.parse(data);
-  const newContact={
-      id: shortid.generate(),
-      ...body
-      }
-  await fs.writeFile(contactsPath,JSON.stringify([...contacts,newContact]));
-return newContact 
-  
-}
-
-const updateContact = async (contactId, body) => {
-  const contacts = JSON.parse(await fs.readFile(contactsPath)); 
-  const index = contacts.findIndex(({id}) => id === contactId);
-  if (index === -1) {
-    throw httpError(404,'Not Found')
-  }
-  contacts[index] = {id: contactId, ...body};
-  await fs.writeFile(contactsPath,JSON.stringify(contacts));
-  return contacts[index];
-}
+const contactSchema = mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, 'Name is required to set'],
+        trim: true,
+      },
+      email: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      phone: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      favorite: {
+        type: Boolean,
+        default: false,
+      }, 
+}, {
+    versionKey: false,
+    timestamps: {createdAt: true, updatedAt: false,}
+})
+contactSchema.post("save",(error,data,next)=>{error.status=400;next();})
+const ContactModel = mongoose.model('contacts', contactSchema);
 
 module.exports = {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
+  ContactModel,
 }

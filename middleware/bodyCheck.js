@@ -13,7 +13,15 @@ const validateBody=()=>{
         }
         next();
       });}
-
+      const validateBodyUpdate =()=>{
+        return((req, res, next) => {
+            if (Object.keys(req.body).length === 0) {
+                res.status(400).json({message: 'missing fields'})
+                return;
+            }
+            next();
+          });}
 module.exports = {
     validateBody,
+    validateBodyUpdate,
   }
