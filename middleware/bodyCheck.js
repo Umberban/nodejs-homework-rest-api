@@ -16,7 +16,7 @@ const validateBody=()=>{
       const validateBodyUpdate =()=>{
         return((req, res, next) => {
             if (Object.keys(req.body).length === 0) {
-                res.status(400).json({message: 'missing fields'})
+                res.status(400).json({message: "missing field favorite"})
                 return;
             }
             next();
