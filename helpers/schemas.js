@@ -1,16 +1,30 @@
 const Joi = require('joi')
-const schema = Joi.object({
+const contactAddSchema = Joi.object({
     name: Joi.string().required().messages({'any.required': `missing required name field `}),
     email: Joi.string().required().messages({'any.required': `missing required email field `}),
     phone: Joi.string().required().messages({'any.required': `missing required phone field `}),
 }).min(3)
-const schemaFavorite = Joi.object({
+const contactFavoriteSchema = Joi.object({
     favorite: Joi.boolean().required().messages({'any.required': `missing field favorite`}),
     
 })
-
+const userLoginSchema = Joi.object({
+    email: Joi.string()
+      .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+      .required(),
+    password: Joi.string().min(6).max(24).required(),
+  });
+  const userRegisterSchema = Joi.object({
+    email: Joi.string()
+      .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+      .required(),
+    subscription: Joi.string().valid('starter', 'pro', 'business'),
+    password: Joi.string().min(6).max(24).required(),
+  });
 
 module.exports = {
-    schema,
-    schemaFavorite,
+  contactAddSchema,
+  contactFavoriteSchema,
+    userLoginSchema,
+    userRegisterSchema,
   }

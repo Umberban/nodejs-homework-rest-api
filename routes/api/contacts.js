@@ -1,17 +1,19 @@
 const express = require('express')
-const Controllers = require('../../controllers/index');
+const Controllers = require('../../controllers/contacts');
 const { validateBody } = require('../../middleware/bodyCheck');
-const {schema,schemaFavorite} = require('../../helpers/schemas')
+const {contactAddSchema,contactFavoriteSchema} = require('../../helpers/schemas')
+const { authCheck } = require("../../middleware/authCheck");
+const { exceptionWrapper } = require('../../helpers/exceptionWrapper');
 const router = express.Router()
-router.get('/', Controllers.listContacts)
+router.get('/',authCheck, exceptionWrapper(Controllers.listContacts))
 
-router.get('/:contactId',Controllers.getContactById)
+router.get('/:contactId',authCheck,exceptionWrapper(Controllers.getContactById))
 
-router.post('/',validateBody(schema),Controllers.addContact)
+router.post('/',validateBody(contactAddSchema),authCheck,exceptionWrapper(Controllers.addContact))
 
-router.delete('/:contactId', Controllers.removeContact)
+router.delete('/:contactId',authCheck, exceptionWrapper(Controllers.removeContact))
 
-router.put('/:contactId',validateBody(schema), Controllers.updateContact)
+router.put('/:contactId',validateBody(contactAddSchema),authCheck, exceptionWrapper(Controllers.updateContact))
 router.patch (
-    "/:contactId/favorite",validateBody(schemaFavorite),Controllers.updateContactStatus)
+    "/:contactId/favorite",validateBody(contactFavoriteSchema),authCheck, exceptionWrapper(Controllers.updateContactStatus))
 module.exports = router
