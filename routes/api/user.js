@@ -27,5 +27,11 @@ router.get(
   authCheck,
   exceptionWrapper(userController.currentUser)
 );
+router.patch(
+  "/avatars",
+  authCheck,
+  userController.upload.single("avatar"),
+  exceptionWrapper(userController.updateAvatar)
+);
 
 module.exports = router;
