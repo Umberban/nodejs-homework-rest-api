@@ -1,21 +1,8 @@
-const multer = require("multer");
 const path = require("path");
 const Jimp = require("jimp");
 const { UserModel } = require("../../models/users");
 const { httpError } = require("../../helpers/httpError");
-
-const multerConfig = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.resolve("./tmp"));
-  },
-  filename: function (req, file, cb) {
-    const filename = file.originalname;
-    cb(null, filename);
-  },
-});
-
-const upload = multer({ storage: multerConfig });
-
+const fs = require('fs').promises;
 const updateAvatar = async (req, res, next) => {
   try {
     const { _id } = req.user;
@@ -31,6 +18,8 @@ const updateAvatar = async (req, res, next) => {
       { _id: _id },
       { avatarURL: filePath}
     );
+    await fs.unlink(req.file.path)
+  
     res.json({ avatarURL: filePath });
 
   } catch (error) {
@@ -40,5 +29,4 @@ const updateAvatar = async (req, res, next) => {
 
 module.exports = {
   updateAvatar,
-  upload,
 };

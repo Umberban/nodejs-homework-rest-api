@@ -4,6 +4,7 @@ const { userRegisterSchema, userLoginSchema } = require("../../helpers/schemas")
 const { validateBody } = require("../../middleware/bodyCheck");
 const { authCheck } = require("../../middleware/authCheck");
 const { exceptionWrapper } = require("../../helpers/exceptionWrapper");
+const { upload } = require("../../middleware/upload");
 
 const router = express.Router();
 
@@ -30,8 +31,7 @@ router.get(
 router.patch(
   "/avatars",
   authCheck,
-  userController.upload.single("avatar"),
+  upload.single("avatar"),
   exceptionWrapper(userController.updateAvatar)
 );
-
 module.exports = router;
