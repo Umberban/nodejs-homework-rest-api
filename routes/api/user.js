@@ -13,10 +13,10 @@ router.post(
   validateBody(userRegisterSchema),
   exceptionWrapper(userController.register)
 );
-router.get("/auth/verify/:verificationCode", 
+router.get("/verify/:verificationCode", 
 exceptionWrapper(userController.verifyEmail));
 
-router.post("/auth/verify", 
+router.post("/verify", 
 validateBody(verifySchema), 
 exceptionWrapper(userController.resendEmail));
 

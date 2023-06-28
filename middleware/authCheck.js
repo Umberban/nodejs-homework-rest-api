@@ -14,7 +14,7 @@ const authCheck = async (req, res, next) => {
 
       const user = await UserModel.findById(decodedToken._id)
 
-      if (!user || !user.token) {
+      if (!user || !user.token || !user.verify  ) {
         throw httpError(401, "Not authorized")
       }
 
