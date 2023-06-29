@@ -7,7 +7,9 @@ const login = async (req, res, next) => {
     const { email, password } = req.body;
     
     const user = await UserModel.findOne({ email }); 
-
+    if (!user.verify ) {
+      throw httpError(401, "Not verify")
+    }
  if (user === null) {
     throw httpError(401, "Email or password is wrong");
   }
