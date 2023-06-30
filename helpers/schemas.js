@@ -1,4 +1,5 @@
 const Joi = require('joi')
+const regexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const contactAddSchema = Joi.object({
     name: Joi.string().required().messages({'any.required': `missing required name field `}),
     email: Joi.string().required().messages({'any.required': `missing required email field `}),
@@ -22,9 +23,14 @@ const userLoginSchema = Joi.object({
     password: Joi.string().min(6).max(24).required(),
   });
 
+  const verifySchema = Joi.object({
+    email: Joi.string().pattern(regexp).required(),
+  });
+  
 module.exports = {
   contactAddSchema,
   contactFavoriteSchema,
     userLoginSchema,
     userRegisterSchema,
+    verifySchema,
   }

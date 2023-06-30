@@ -1,6 +1,6 @@
 const express = require("express");
 const userController = require("../../controllers/users");
-const { userRegisterSchema, userLoginSchema } = require("../../helpers/schemas");
+const { userRegisterSchema, userLoginSchema,verifySchema } = require("../../helpers/schemas");
 const { validateBody } = require("../../middleware/bodyCheck");
 const { authCheck } = require("../../middleware/authCheck");
 const { exceptionWrapper } = require("../../helpers/exceptionWrapper");
@@ -13,6 +13,13 @@ router.post(
   validateBody(userRegisterSchema),
   exceptionWrapper(userController.register)
 );
+router.get("/verify/:verificationCode", 
+exceptionWrapper(userController.verifyEmail));
+
+router.post("/verify", 
+validateBody(verifySchema), 
+exceptionWrapper(userController.resendEmail));
+
 router.post(
   "/login",
   validateBody(userLoginSchema),
